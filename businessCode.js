@@ -240,4 +240,41 @@ const updateEmployeeRole = () => {
     })
   }
   
-   
+   //ADD EMPLOYEE ROLE
+function addEmployeeRole() {
+    connection.query(
+      "SELECT employee_role.title AS Title, employee_role.salary AS Salary FROM employee_role",
+      function (err, res) {
+        inquirer
+          .prompt([
+            {
+              name: "Title",
+              type: "input",
+              message: "What is the title of the role?",
+            },
+            {
+              name: "Salary",
+              type: "input",
+              message: "What is the salary of the role?",
+            },
+          ])
+          .then(function (res) {
+            connection.query(
+              "INSERT INTO employee_role SET ?",
+              {
+                title: res.Title,
+                salary: res.Salary,
+              },
+              function (err) {
+                if (err) throw err;
+                console.log("Successfully added an employee role!")
+                console.table(res);
+                runSearch();
+              }
+            );
+          });
+      }
+    );
+  }
+
+  
