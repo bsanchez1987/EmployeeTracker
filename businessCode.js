@@ -1,4 +1,5 @@
-
+const connection = require('./config/connection');
+const inquirer = require('inquirer');
 
 
 //APP RUN PROMPT
@@ -11,7 +12,6 @@ const runSearch = () => {
         message: 'What would you like to do?',
         choices: [
           'View All Employees',
-          'View All Employees By Department',
           'View All Departments',
           'View All Employee Roles',
           'Add Employee',
@@ -75,3 +75,15 @@ const viewAllEmployees = () => {
       runSearch();
     })
   }
+
+  //VIEW ALL DEPARTMENTS
+
+const viewAllDepartments = () => {
+    connection.query("SELECT name AS Departments FROM department", (err, res) => {
+      if (err) throw err
+      console.table(res);
+      runSearch();
+    })
+  }
+
+  
