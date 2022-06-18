@@ -17,7 +17,6 @@ const runSearch = () => {
           'Add Employee',
           'Remove Employee',
           'Update Employee Role',
-          // 'Update Employee Manager',
           'Add Employee Role',
           'Add Department'
         ],
@@ -52,10 +51,6 @@ const runSearch = () => {
             updateEmployeeRole();
             break;
   
-          // case 'Update Employee Manager':
-          //   updateEmployeeManager();
-          //   break;
-  
           case 'Add Employee Role':
             addEmployeeRole();
             break;
@@ -70,3 +65,13 @@ const runSearch = () => {
         }
       });
   };
+
+  //VIEW ALL EMPLOYEES
+
+const viewAllEmployees = () => {
+    connection.query("SELECT employee.id, employee.first_name, employee.last_name, employee_role.title AS Title, department.name AS Department, employee_role.salary AS Salary, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN employee_role on employee_role.id = employee.role_id INNER JOIN department on department.id = employee_role.department_id left join employee e on employee.manager_id = e.id;", (err, res) => {
+      if (err) throw err
+      console.table(res);
+      runSearch();
+    })
+  }
