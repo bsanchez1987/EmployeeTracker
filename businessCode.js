@@ -168,3 +168,31 @@ function addEmployee() {
         });
     });
   }
+
+  //REMOVE EMPLOYEE
+
+function removeEmployee() {
+    connection.query("SELECT * FROM employee", function (err, res) {
+      if (err) throw err;
+      inquirer.prompt([
+        {
+          type: "rawlist",
+          name: "removeEmp",
+          message: "Select the employee who will be removed",
+          choices: res.map(emp => emp.id && emp.first_name)
+        }
+      ]).then(function (answer) {
+        const selectedEmp = res.find(emp => emp.id && emp.first_name === answer.removeEmp);
+        connection.query("DELETE FROM employee WHERE ?",
+          [{
+            id: selectedEmp.id
+          }],
+          function (err, res) {
+            if (err) throw err;
+            console.log("The employee has been removed.\n");
+            runSearch();
+          }
+        );
+      });
+    })
+  };
