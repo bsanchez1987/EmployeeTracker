@@ -95,3 +95,76 @@ const viewAllRoles = () => {
       runSearch();
     })
   }
+
+
+
+  //ADD EMPLOYEE
+
+function addEmployee() {
+    connection.query("SELECT * FROM employee_role", function (err, results) {
+      if (err) throw err;
+      inquirer
+        .prompt([
+          {
+            name: 'employeeAdd',
+            type: 'input',
+            message: 'Enter the first name of the employee you would like to add.',
+          },
+          {
+            name: 'last_name',
+            type: 'input',
+            message: 'Enter the last name of the employee you would like to add.',
+          },
+          {
+            name: 'role_id',
+            type: 'list',
+            message: 'Select the role of this employee.',
+            choices: results.map((item) => item.title),
+          },
+        ])
+        .then((answer) => {
+          const roleChosen = results.find(
+            (item) => item.title === answer.role_id
+          );
+          const employeeFirstName = answer.employeeAdd;
+          const employeeLastName = answer.last_name;
+          connection.query("SELECT * FROM employee", function (err, results) {
+            if (err) throw err;
+            inquirer
+              .prompt([
+                {
+                  name: 'manager_id',
+                  type: 'list',
+                  message: 'Select the manager for this employee.',
+                  choices: results.map((item) => item.first_name),
+                },
+              ])
+              .then((answer) => {
+                const managerChosen = results.find(
+                  (item) => item.first_name === answer.manager_id
+                );
+                connection.query(
+                  "INSERT INTO employee SET ?",
+                  {
+                    first_name: employeeFirstName,
+                    last_name: employeeLastName,
+                    role_id: roleChosen.id,
+                    manager_id: managerChosen.id,
+                  },
+                  function (err) {
+                    if (err) throw err;
+                    console.log(
+                      "Added " +
+                        employeeFirstName +
+                        " " +
+                        employeeLastName +
+                        " to the team!"
+                    );
+                    runSearch();
+                  }
+                );
+              });
+          });
+        });
+    });
+  }
