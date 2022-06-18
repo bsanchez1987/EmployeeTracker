@@ -97,7 +97,6 @@ const viewAllRoles = () => {
   }
 
 
-
   //ADD EMPLOYEE
 
 function addEmployee() {
@@ -277,4 +276,29 @@ function addEmployeeRole() {
     );
   }
 
-  
+  //ADD DEPARTMENT
+function addDepartment() { 
+    inquirer.prompt([
+        {
+          name: "name",
+          type: "input",
+          message: "What department would you like to add?"
+        }
+    ]).then(function(res) {
+        var query = connection.query(
+            "INSERT INTO department SET ? ",
+            {
+              name: res.name
+            
+            },
+            function(err) {
+                if (err) throw err
+                console.log("Successfully added a department!");
+                console.table(res);
+                runSearch();
+            }
+        )
+    })
+  }
+
+  runSearch();
