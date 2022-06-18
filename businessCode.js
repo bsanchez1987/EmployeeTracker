@@ -86,4 +86,12 @@ const viewAllDepartments = () => {
     })
   }
 
-  
+  //VIEW ALL EMPLOYEES BY ROLE
+
+const viewAllRoles = () => {
+    connection.query("SELECT title AS Title, salary AS Salary FROM employee_role", (err, res) => {
+      if (err) throw err
+      console.table(res);
+      runSearch();
+    })
+  }
